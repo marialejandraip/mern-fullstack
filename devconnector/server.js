@@ -6,6 +6,9 @@ const app = express();
 //Connect db
 connectdb();
 
+// Init middleware
+app.use(express.json({extended: false}));
+
 app.get('/', (req, res)=> res.send('<h1>Hola mundo</h1>'))
 
 //Define routes
