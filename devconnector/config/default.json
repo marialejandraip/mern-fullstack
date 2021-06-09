@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://marialejandraip:eiIl6QmEpHjz5DtA@cluster0.4iwi8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://marialejandraip:eiIl6QmEpHjz5DtA@cluster0.4iwi8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  "jwtSecret": "secretToken13"
 }
