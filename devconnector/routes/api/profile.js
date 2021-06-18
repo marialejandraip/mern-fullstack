@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-//@route GET api/users
-//@desc Test Route
-//access Public
+//@route GET api/profile/me
+//@desc current user profile
+//access Private
 router.get('/', (req, res) => {
   res.send('profile route');
 });
