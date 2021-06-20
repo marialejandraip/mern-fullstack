@@ -43,6 +43,7 @@ router.post('/', [ auth, [
     if(!errors.isEmpty()){
       return res.status(400).json({ errors: errors.array() });
     }
+
     const {
       company,
       website,
@@ -86,12 +87,12 @@ router.post('/', [ auth, [
   //res.send('hellowsito')
   try {
     let profile = Profile.findOne({ user: req.user.id });
-    if(profile){
-      //update profile
-      profile = await Profile.findOneAndUpdate({ user: req.user.id }, { $set: profileFields }, {new: true});
-      console.log(profile);
-      return res.json(profile);
-    }
+    // if(profile){
+    //   //update profile
+    profile = await Profile.findOneAndUpdate({ user: req.user.id }, { $set: profileFields }, {new: true});
+    //   return res.json(profile);
+    // }
+    console.log(profile);
     //Create
     profile = new Profile(profileFields);
     await profile.save();
