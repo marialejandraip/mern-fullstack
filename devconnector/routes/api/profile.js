@@ -146,7 +146,20 @@ router.delete('/', auth, async(req, res)=> {
     await Profile.findOneAndRemove({ user: req.user.id });
     await User.findOneAndRemove({ _id: req.user.id });
     res.json({msg: 'User deleted!'})
-    
+
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json('Server Error!')
+  }
+});
+
+//@route PUT api/profile/experience
+//@desc update user experience
+//access Private
+router.put('/experience', auth, async(req, res)=> {
+  try {
+    res.json({msg: 'Profile updated!'})
+
   } catch (error) {
     console.error(error.message);
     res.status(500).json('Server Error!')
