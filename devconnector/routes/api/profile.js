@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, check } = require('express-validator');
 const { profile_url } = require('gravatar');
 const auth = require('../../middleware/auth');
 
@@ -156,9 +156,44 @@ router.delete('/', auth, async(req, res)=> {
 //@route PUT api/profile/experience
 //@desc update user experience
 //access Private
-router.put('/experience', auth, async(req, res)=> {
+router.put('/experience', [auth, [
+  check('title', 'Title is required').not().isEmpty(),
+  check('company', 'Company is required').not().isEmpty(),
+  check('from', 'From date is required').not().isEmpty()
+]], async(req, res)=> {
+
+  //validation of checks 
+  const errors = validationResult(req);
+  if (!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array()})
+  }
+  const {
+    title,
+    company,
+    location,
+    from,
+    to,
+    current,
+    description
+  } = req.body
+
+  const newExp = { 
+    title,
+    company,
+    location,
+    from,
+    to,
+    current,
+    description
+  }
+
   try {
-    res.json({msg: 'Profile updated!'})
+    const profile = await Profile.findOne({user: req.user.id});
+    console.log(profile);
+    // like push but on first
+    profile.experience.unshift(newExp);
+    await profile.save();
+    res.json(profile, {msg: 'Profile updated!'})
 
   } catch (error) {
     console.error(error.message);
@@ -166,5 +201,22 @@ router.put('/experience', auth, async(req, res)=> {
   }
 });
 
+//@route DELETE api/profile/experience/:exp_id
+//@desc delete user experience
+//access Private
+router.delete ('experience/:exp_id', auth, async (req, res)=> {
+  try {
+    const profile = Profile.findOne({user: req.user.id});
+    //Get remove index
+    const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.exp_id);
+    // get index from array of objects experience
+    profile.experience.splice(removeIndex,1)
+    // save change
+    await profile.save();
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json('Server Error!')
+  }
+})
 
 module.exports = router;
